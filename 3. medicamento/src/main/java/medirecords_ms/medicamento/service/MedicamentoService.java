@@ -54,6 +54,25 @@ public class MedicamentoService {
         );
     }
     
+    public List<MedicamentoResponseDTO> buscarVariosId(List<Long> medicamentos){
+        List<MedicamentoResponseDTO> resultado = new ArrayList<>();
+
+        for(Long id : medicamentos){
+            Medicamento encontrado = buscarId(id);
+            
+            MedicamentoResponseDTO response = new MedicamentoResponseDTO(
+            encontrado.getId(),
+            encontrado.getNombre(),
+            encontrado.getMarca(),
+            encontrado.getTipo(),
+            encontrado.getPrecio(),
+            encontrado.getStock()
+            );
+            resultado.add(response);
+        }
+        return resultado;
+    }
+
     public MedicamentoResponseDTO crear(MedicamentoRequestDTO request) {
         if (existeId(request.getId())){
             throw new RuntimeException("medicamento ya existe");

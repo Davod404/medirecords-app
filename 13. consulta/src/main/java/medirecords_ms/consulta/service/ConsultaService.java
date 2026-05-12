@@ -28,118 +28,134 @@ public class ConsultaService {
         List<Consulta> lista = consultaRepository.findAll();
         List<ConsultaResponseDTO> resultado = new ArrayList<>();
         
-        for (Consulta request : lista) {
+        for (Consulta consulta : lista) {
+            PacienteDTO paciente = pacienteCliente.buscarDetallado(consulta.getPacienteId());
+            PersonalDTO personal = personalCliente.buscarDetallado(consulta.getPersonalId());
+            HospitalDTO hospital = hospitalCliente.buscarDetallado(consulta.getHospitalId());
+
             ConsultaResponseDTO response = new ConsultaResponseDTO(
-                request.getId(),
-                request.getFechaConsulta(),
-                request.getMotivo(),
-                request.getDiagnostico(),
-                request.getPacienteId(),
-                request.getPersonalId(),
-                request.getHospitalId()
+                consulta.getId(),
+                consulta.getFechaConsulta(),
+                consulta.getMotivo(),
+                consulta.getDiagnostico(),
+                paciente,
+                personal,
+                hospital
             );
             resultado.add(response);
         }
-        
         return resultado;
     }
 
-    public Consulta buscarId(Long id) {
-        return consultaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Consulta no encontrada"));
+    private Consulta buscarId(Long id) {
+        return consultaRepository.findById(id)    
+            .orElseThrow(() -> new RuntimeException("Consulta no encontrada con id: " + id));
     }
 
-    public ConsultaResponseDTO buscarDetalle(Long id) {
-        Consulta request = buscarId(id);
+    public Boolean existeId(Long id){
+        return consultaRepository.existsById(id);
+    }
+
+    public ConsultaResponseDTO buscarDetallado(Long id) {
+        Consulta encontrado = buscarId(id);
         
-        HospitalDTO hospital = hospitalCliente.buscarHospitalPorId(request.getHospitalId());
-        PersonalDTO personal = personalCliente.buscarDetalle(request.getPersonalId());
-        PacienteDTO paciente = pacienteCliente.buscarDetalle(request.getPacienteId());  
-        
+        PacienteDTO paciente = pacienteCliente.buscarDetallado(encontrado.getPacienteId());
+        PersonalDTO personal = personalCliente.buscarDetallado(encontrado.getPersonalId());
+        HospitalDTO hospital = hospitalCliente.buscarDetallado(encontrado.getHospitalId());
+
         return new ConsultaResponseDTO(
-            request.getId(),
-            request.getFechaConsulta(),
-            request.getMotivo(),
-            request.getDiagnostico(),
-            paciente.getId(),
-            personal.getId(),
-            hospital.getId()
+            encontrado.getId(),
+            encontrado.getFechaConsulta(),
+            encontrado.getMotivo(),
+            encontrado.getDiagnostico(),
+            paciente,
+            personal,
+            hospital
         );
     }
 
-    public List<ConsultaResponseDTO> buscarVariosId(List<Long> ids) {
-        List<Consulta> consultas = consultaRepository.findAllById(ids);
+    public List<ConsultaResponseDTO> buscarVariosId(List<Long> consultas){
         List<ConsultaResponseDTO> resultado = new ArrayList<>();
 
-        for (Consulta consulta : consultas) {
-            resultado.add(new ConsultaResponseDTO(
-                consulta.getId(),
-                consulta.getFechaConsulta(), 
-                consulta.getMotivo(), 
-                consulta.getDiagnostico(),
-                consulta.getPacienteId(),
-                consulta.getPersonalId(),
-                consulta.getHospitalId()
-            ));
+        for(Long id : consultas){
+            Consulta encontrado = buscarId(id);
+
+            PacienteDTO paciente = pacienteCliente.buscarDetallado(encontrado.getPacienteId());
+            PersonalDTO personal = personalCliente.buscarDetallado(encontrado.getPersonalId());
+            HospitalDTO hospital = hospitalCliente.buscarDetallado(encontrado.getHospitalId());
+            
+            ConsultaResponseDTO response = new ConsultaResponseDTO(
+            encontrado.getId(),
+            encontrado.getFechaConsulta(),
+            encontrado.getMotivo(),
+            encontrado.getDiagnostico(),
+            paciente,
+            personal,
+            hospital
+            );
+            resultado.add(response);
         }
         return resultado;
     }
 
-
-    public ConsultaResponseDTO crearConsulta(ConsultaRequestDTO request){
-        HospitalDTO hospital = hospitalCliente.buscarHospitalPorId(request.getHospitalId());
-        PersonalDTO personal = personalCliente.buscarDetalle(request.getPersonalId());
-        PacienteDTO paciente = pacienteCliente.buscarDetalle(request.getPacienteId());
-
-        Consulta nueva = new Consulta();
-        nueva.setFechaConsulta(request.getFechaConsulta());
-        nueva.setMotivo(request.getMotivo());
-        nueva.setDiagnostico(request.getDiagnostico());
-        nueva.setHospitalId(hospital.getId());
-        nueva.setPersonalId(personal.getId());
-        nueva.setPacienteId(paciente.getId());
-
-        Consulta guardada = consultaRepository.save(nueva);
-
-        return new ConsultaResponseDTO(
-            guardada.getId(),
-            guardada.getFechaConsulta(),
-            guardada.getMotivo(),
-            guardada.getDiagnostico(),
-            guardada.getPacienteId(),
-            guardada.getPersonalId(),
-            guardada.getHospitalId()
-        );
-    }
-
-    public ConsultaResponseDTO actualizarConsulta(Long id, ConsultaRequestDTO request){
-        Consulta encontrada = buscarId(id);
-
-        HospitalDTO hospital = hospitalCliente.buscarHospitalPorId(request.getHospitalId());
-        PersonalDTO personal = personalCliente.buscarDetalle(request.getPersonalId());
-        PacienteDTO paciente = pacienteCliente.buscarDetalle(request.getPacienteId());        
-    
-        encontrada.setFechaConsulta(request.getFechaConsulta());
-        encontrada.setMotivo(request.getMotivo());
-        encontrada.setDiagnostico(request.getDiagnostico());
-        encontrada.setPacienteId(paciente.getId());
-        encontrada.setPersonalId(personal.getId());
-        encontrada.setHospitalId(hospital.getId());
+    public ConsultaResponseDTO crear(ConsultaRequestDTO request) {
+        Consulta encontrada = buscarId(request.getId());
         
-        Consulta actualizada = consultaRepository.save(encontrada);
+        PacienteDTO paciente = pacienteCliente.buscarDetallado(encontrada.getPacienteId());
+        PersonalDTO personal = personalCliente.buscarDetallado(encontrada.getPersonalId());
+        HospitalDTO hospital = hospitalCliente.buscarDetallado(encontrada.getHospitalId());
 
+        Consulta consulta = new Consulta();
+        consulta.setFechaConsulta(request.getFechaConsulta());
+        consulta.setDiagnostico(request.getDiagnostico());
+        consulta.setMotivo(request.getMotivo());
+        consulta.setPacienteId(request.getPacienteId());
+        consulta.setPersonalId(request.getPacienteId());
+        consulta.setHospitalId(request.getPacienteId());
+        Consulta guardado = consultaRepository.save(consulta);
+        
         return new ConsultaResponseDTO(
-            actualizada.getId(),
-            actualizada.getFechaConsulta(),
-            actualizada.getMotivo(),
-            actualizada.getDiagnostico(),
-            actualizada.getPacienteId(),
-            actualizada.getPersonalId(),
-            actualizada.getHospitalId()
+            guardado.getId(),
+            guardado.getFechaConsulta(),
+            guardado.getMotivo(),
+            guardado.getDiagnostico(),
+            paciente,
+            personal,
+            hospital
         );
     }
 
-    public void borrarConsulta(Long id){
+    public ConsultaResponseDTO actualizar(Long id, ConsultaRequestDTO request) {
+        Consulta encontrada = buscarId(id);
+        
+        PacienteDTO paciente = pacienteCliente.buscarDetallado(encontrada.getPacienteId());
+        PersonalDTO personal = personalCliente.buscarDetallado(encontrada.getPersonalId());
+        HospitalDTO hospital = hospitalCliente.buscarDetallado(encontrada.getHospitalId());
+
+        Consulta actualizado = new Consulta();
+        actualizado.setFechaConsulta(request.getFechaConsulta());
+        actualizado.setDiagnostico(request.getDiagnostico());
+        actualizado.setMotivo(request.getMotivo());
+        actualizado.setPacienteId(request.getPacienteId());
+        actualizado.setPersonalId(request.getPacienteId());
+        actualizado.setHospitalId(request.getPacienteId()); 
+        Consulta guardado = consultaRepository.save(actualizado);
+        
+        return new ConsultaResponseDTO(
+            guardado.getId(),
+            guardado.getFechaConsulta(),
+            guardado.getMotivo(),
+            guardado.getDiagnostico(),
+            paciente,
+            personal,
+            hospital
+        );
+    }
+
+    public void borrar(Long id){
+        if (!existeId(id)){
+            throw new RuntimeException("consulta no existe");
+        }
         consultaRepository.deleteById(id);
     }
 }

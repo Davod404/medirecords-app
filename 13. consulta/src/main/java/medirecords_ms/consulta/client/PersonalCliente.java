@@ -9,5 +9,5 @@ import medirecords_ms.consulta.dto.PersonalDTO;
 @FeignClient(name = "personal")
 public interface PersonalCliente {
     @GetMapping("/api/personal/{id}")
-    PersonalDTO buscarDetalle(@PathVariable("id") Long id);
+    PersonalDTO buscarDetallado(@PathVariable("id") Long id);
 }

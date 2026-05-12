@@ -1,4 +1,4 @@
-package medirecords_ms.medicamento.controller;
+    package medirecords_ms.medicamento.controller;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -39,6 +40,18 @@ public class MedicamentoController {
         return ResponseEntity
         .status(HttpStatus.OK)
         .body(medicamentoService.buscarDetallado(id));
+    }
+
+    @GetMapping("/medicamentos")
+    public ResponseEntity<List<MedicamentoResponseDTO>> buscarVariosId(@RequestParam("consultas") List<Long> consultas) {
+        if (medicamentoService.buscarVariosId(consultas).isEmpty()){
+            ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("se debe ingresar identificadores de medicamentos");
+        }
+        return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(medicamentoService.buscarVariosId(consultas));
     }
 
     @PostMapping

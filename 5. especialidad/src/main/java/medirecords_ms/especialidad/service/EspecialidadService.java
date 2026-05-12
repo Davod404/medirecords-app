@@ -46,6 +46,21 @@ public class EspecialidadService {
         );
     }
     
+    public List<EspecialidadResponseDTO> buscarVariosId(List<Long> medicamentos){
+        List<EspecialidadResponseDTO> resultado = new ArrayList<>();
+
+        for(Long id : medicamentos){
+            Especialidad encontrado = buscarId(id);
+            
+            EspecialidadResponseDTO response = new EspecialidadResponseDTO(
+            encontrado.getId(),
+            encontrado.getEspecialidad()
+            );
+            resultado.add(response);
+        }
+        return resultado;
+    }
+
     public EspecialidadResponseDTO crear(EspecialidadRequestDTO request){
         if (existeId(request.getId())){
             throw new RuntimeException("especialidad ya existe");

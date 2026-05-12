@@ -12,8 +12,8 @@ import medirecords_ms.historial.dto.ConsultaDTO;
 @FeignClient(name = "consulta")
 public interface ConsultaCliente {
     @GetMapping("/api/consultas/{id}")
-    ConsultaDTO buscarDetalle(@PathVariable("id") Long id);
+    ConsultaDTO buscarDetallado(@PathVariable("id") Long id);
 
     @GetMapping("/api/consultas")
-    List<ConsultaDTO> buscarVariosId(@RequestParam("ids") List<Long> consultasId);
+    List<ConsultaDTO> buscarVariosId(@RequestParam("consultas") String consultas);
 }

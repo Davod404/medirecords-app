@@ -9,5 +9,5 @@ import medirecords_ms.consulta.dto.HospitalDTO;
 @FeignClient(name = "hospital")
 public interface HospitalCliente {
     @GetMapping("/api/hospitales/{id}")
-    HospitalDTO buscarHospitalPorId(@PathVariable("id") Long id);
+    HospitalDTO buscarDetallado(@PathVariable("id") Long id);
 }

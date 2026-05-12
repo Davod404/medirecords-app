@@ -43,9 +43,12 @@ public class PersonalService {
             
             CargoDTO cargo = cargoCliente.buscarId(personal.getCargoId());
             
-            String idsString = personal.getEspecialidadesId();
-            List<EspecialidadDTO> especialidades = especialidadCliente.buscarVariosId(idsString);
-            
+            String especialidadesId = personal.getEspecialidadesId();
+            List<EspecialidadDTO> especialidades = especialidadCliente.buscarVariosId(especialidadesId);
+            if(especialidades.isEmpty()){
+                throw new RuntimeException("especialidades no puede estar vacio");
+            }
+
             PersonalResponseDTO response = new PersonalResponseDTO(
                 personal.getId(),
                 personal.getRut(),
@@ -59,7 +62,6 @@ public class PersonalService {
             );
             resultado.add(response);
         }
-        
         return resultado;
     }
 
@@ -79,7 +81,10 @@ public class PersonalService {
         
         String especialidadesId = encontrado.getEspecialidadesId();
         List<EspecialidadDTO> especialidades = especialidadCliente.buscarVariosId(especialidadesId);
-        
+        if(especialidades.isEmpty()){
+            throw new RuntimeException("especialidades no puede estar vacio");
+        }
+
         return new PersonalResponseDTO(
             encontrado.getId(),
             encontrado.getRut(),
@@ -96,9 +101,12 @@ public class PersonalService {
     public PersonalResponseDTO crear(PersonalRequestDTO request) {
         CargoDTO cargo = cargoCliente.buscarId(request.getCargoId());
         
-        String idsString = convertirListaToString(request.getEspecialidadesId());
-        List<EspecialidadDTO> especialidades = especialidadCliente.buscarVariosId(idsString);
-        
+        String especialidadesId = convertirListaToString(request.getEspecialidadesId());
+        List<EspecialidadDTO> especialidades = especialidadCliente.buscarVariosId(especialidadesId);
+        if(especialidades.isEmpty()){
+            throw new RuntimeException("especialidades no puede estar vacio");
+        }
+
         Personal personal = new Personal();
         personal.setRut(request.getRut());
         personal.setDvRut(request.getDvRut());
@@ -107,7 +115,7 @@ public class PersonalService {
         personal.setTelefono(request.getTelefono());
         personal.setEmail(request.getEmail());
         personal.setCargoId(request.getCargoId());
-        personal.setEspecialidadesId(idsString);
+        personal.setEspecialidadesId(especialidadesId);
         
         Personal guardado = personalRepository.save(personal);
         
@@ -131,6 +139,9 @@ public class PersonalService {
         
         String especialidadesId = convertirListaToString(request.getEspecialidadesId());
         List<EspecialidadDTO> especialidades = especialidadCliente.buscarVariosId(especialidadesId);
+        if(especialidades.isEmpty()){
+            throw new RuntimeException("especialidades no puede estar vacio");
+        }
         
         encontrado.setRut(request.getRut());
         encontrado.setDvRut(request.getDvRut());

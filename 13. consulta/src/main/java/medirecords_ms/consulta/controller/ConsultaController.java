@@ -1,6 +1,5 @@
 package medirecords_ms.consulta.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import medirecords_ms.consulta.dto.ConsultaRequestDTO;
 import medirecords_ms.consulta.dto.ConsultaResponseDTO;
 import medirecords_ms.consulta.service.ConsultaService;
@@ -28,37 +28,67 @@ public class ConsultaController {
 
     @GetMapping
     public ResponseEntity<List<ConsultaResponseDTO>> listarTodos(){
-        return ResponseEntity.status(HttpStatus.OK).body(consultaService.listarTodos());
+        return ResponseEntity.ok(consultaService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ConsultaResponseDTO> buscarDetalle(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(consultaService.buscarDetalle(id));
+    public ResponseEntity<?> buscarId(@PathVariable Long id){
+        if (consultaService.existeId(id)){
+            return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("no existe consulta con id: " + id);
+        }
+        return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(consultaService.buscarDetallado(id));
     }
 
-    @GetMapping("/buscar")
-    public ResponseEntity<List<ConsultaResponseDTO>> buscarVariosId(@RequestParam("ids") String ids) {
-        String[] partes = ids.split(",");
-        List<Long> listaIds = new ArrayList<>();
-        for (String parte : partes) {
-            listaIds.add(Long.parseLong(parte));
+    @GetMapping("/consultas")
+    public ResponseEntity<List<ConsultaResponseDTO>> buscarVariosId(@RequestParam("consultas") List<Long> consultas) {
+        if (consultaService.buscarVariosId(consultas).isEmpty()){
+            ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("se debe ingresar identificadores de consultas");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(consultaService.buscarVariosId(listaIds));
+        return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(consultaService.buscarVariosId(consultas));
     }
 
     @PostMapping
-    public ResponseEntity<ConsultaResponseDTO> crearConsulta(@RequestBody ConsultaRequestDTO Consulta){
-        return ResponseEntity.status(HttpStatus.CREATED).body(consultaService.crearConsulta(Consulta));
+    public ResponseEntity<?> crear(@Valid @RequestBody ConsultaRequestDTO request){
+        if (!consultaService.existeId(request.getId())){
+            return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(consultaService.crear(request));
+        }
+        return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body("consulta con id " + request.getId() + " ya existe");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ConsultaResponseDTO> actualizarConsulta(@PathVariable Long id, @RequestBody ConsultaRequestDTO Consulta){
-        return ResponseEntity.status(HttpStatus.OK).body(consultaService.actualizarConsulta(id, Consulta));
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody ConsultaRequestDTO request){
+        if (consultaService.existeId(id)){
+            return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(consultaService.actualizar(id, request));
+        }
+        return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body("consulta con id " + id + "no existe");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> borrarConsulta(@PathVariable Long id){
-        consultaService.borrarConsulta(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Borrado: " + id);
+    public ResponseEntity<?> borrar(@PathVariable Long id){
+        if(!consultaService.existeId(id)){
+            return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("consulta con id " + id + "no existe");
+        }
+        consultaService.borrar(id);
+        return ResponseEntity
+        .status(HttpStatus.NO_CONTENT)
+        .body("consulta con id " + id + "borrado exitosamente");
     }
 }

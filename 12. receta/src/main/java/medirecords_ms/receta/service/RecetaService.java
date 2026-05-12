@@ -2,7 +2,6 @@ package medirecords_ms.receta.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,30 +21,18 @@ public class RecetaService {
     @Autowired private ConsultaCliente consultaCliente;
     @Autowired private MedicamentoCliente medicamentoCliente;
 
-    private String convertirListaToString(List<Long> ids) {
-        if (ids == null || ids.isEmpty()) {
+    private String convertirListaToString(List<Long> consultas) {
+        if (consultas == null || consultas.isEmpty()) {
             return "";
         }
         String resultado = "";
-        for (int i = 0; i < ids.size(); i++) {
-            resultado = resultado + ids.get(i);
-            if (i < ids.size() - 1) {
+        for (int i = 0; i < consultas.size(); i++) {
+            resultado = resultado + consultas.get(i);
+            if (i < consultas.size() - 1) {
                 resultado = resultado + ",";
             }
         }
         return resultado;
-    }
-
-    private List<Long> convertirStringToLista(String idsString) {
-        if (idsString == null || idsString.isEmpty()) {
-            return new ArrayList<>();
-        }
-        List<Long> lista = new ArrayList<>();
-        String[] partes = idsString.split(",");
-        for (String parte : partes) {
-            lista.add(Long.parseLong(parte));
-        }
-        return lista;
     }
 
     public List<RecetaResponseDTO> listarTodos() {
@@ -53,69 +40,70 @@ public class RecetaService {
         List<RecetaResponseDTO> resultado = new ArrayList<>();
         
         for (Receta receta : lista) {
+            
             ConsultaDTO consulta = consultaCliente.buscarId(receta.getConsultaId());
             
-            List<Long> ids = convertirStringToLista(receta.getMedicamentosId());
-            List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(
-                ids.stream().map(String::valueOf).collect(Collectors.joining(","))
-            );
-            
-            resultado.add(new RecetaResponseDTO(
+            String medicamentosId =  receta.getMedicamentosId();
+            List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(medicamentosId);
+            if(medicamentos.isEmpty()){
+                throw new RuntimeException("medicamentos no puede estar vacio");
+            }
+
+            RecetaResponseDTO response = new RecetaResponseDTO(
                 receta.getId(),
                 receta.getFechaReceta(),
                 receta.getInstrucciones(),
                 consulta,
                 medicamentos
-            ));
+            );
+            resultado.add(response);
         }
         return resultado;
     }
 
     private Receta buscarId(Long id) {
-        return recetaRepository.findById(id)
+        return recetaRepository.findById(id)    
             .orElseThrow(() -> new RuntimeException("Receta no encontrada con id: " + id));
     }
 
-    public RecetaResponseDTO buscarDetallada(Long id) {
-        Receta receta = buscarId(id);
+    public Boolean existeId(Long id){
+        return recetaRepository.existsById(id);
+    }
+
+    public RecetaResponseDTO buscarDetallado(Long id) {
+        Receta encontrada = buscarId(id);
         
-        ConsultaDTO consulta = consultaCliente.buscarId(receta.getConsultaId());
+        ConsultaDTO consulta = consultaCliente.buscarId(encontrada.getConsultaId());
         
-        List<Long> ids = convertirStringToLista(receta.getMedicamentosId());
-        List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(
-            ids.stream().map(String::valueOf).collect(Collectors.joining(","))
-        );
-        
+        String medicamentosId = encontrada.getMedicamentosId();
+        List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(medicamentosId);
+        if(medicamentos.isEmpty()){
+            throw new RuntimeException("medicamentos no puede estar vacio");
+        }
+
         return new RecetaResponseDTO(
-            receta.getId(),
-            receta.getFechaReceta(),
-            receta.getInstrucciones(),
+            encontrada.getId(),
+            encontrada.getFechaReceta(),
+            encontrada.getInstrucciones(),
             consulta,
             medicamentos
         );
     }
-
-
     
-    public RecetaResponseDTO crearReceta(RecetaRequestDTO dto) {
-        ConsultaDTO consulta = consultaCliente.buscarId(dto.getConsultaId());
+    public RecetaResponseDTO crear(RecetaRequestDTO request) {
+        ConsultaDTO consulta = consultaCliente.buscarId(request.getConsultaId());
         
-        List<Long> ids = dto.getMedicamentosId();
-        if (ids == null) {
-            ids = new ArrayList<>();
+        String medicamentosId = convertirListaToString(request.getMedicamentosId());
+        List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(medicamentosId);
+        if(medicamentos.isEmpty()){
+            throw new RuntimeException("medicamentos no puede estar vacio");
         }
-        
-        String idsString = convertirListaToString(ids);
-        
-        List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(
-            ids.stream().map(String::valueOf).collect(Collectors.joining(","))
-        );
-        
+
         Receta receta = new Receta();
-        receta.setFechaReceta(dto.getFechaReceta());
-        receta.setInstrucciones(dto.getInstrucciones());
-        receta.setConsultaId(dto.getConsultaId());
-        receta.setMedicamentosId(idsString);
+        receta.setFechaReceta(request.getFechaReceta());
+        receta.setInstrucciones(request.getInstrucciones());
+        receta.setConsultaId(request.getConsultaId());
+        receta.setMedicamentosId(medicamentosId);
         
         Receta guardado = recetaRepository.save(receta);
         
@@ -128,28 +116,22 @@ public class RecetaService {
         );
     }
 
-    public RecetaResponseDTO actualizarReceta(Long id, RecetaRequestDTO dto) {
-        Receta existente = buscarId(id);
+    public RecetaResponseDTO actualizar(Long id, RecetaRequestDTO request) {
+        Receta encontrado = buscarId(id);
         
-        ConsultaDTO consulta = consultaCliente.buscarId(dto.getConsultaId());
+        ConsultaDTO consulta = consultaCliente.buscarId(request.getConsultaId());
         
-        List<Long> ids = dto.getMedicamentosId();
-        if (ids == null) {
-            ids = new ArrayList<>();
+        String medicamentosId = convertirListaToString(request.getMedicamentosId());
+        List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(medicamentosId);
+        if(medicamentos.isEmpty()){
+            throw new RuntimeException("medicamentos no puede estar vacio");
         }
-        
-        String idsString = convertirListaToString(ids);
-        
-        List<MedicamentoDTO> medicamentos = medicamentoCliente.buscarVariosId(
-            ids.stream().map(String::valueOf).collect(Collectors.joining(","))
-        );
-        
-        existente.setFechaReceta(dto.getFechaReceta());
-        existente.setInstrucciones(dto.getInstrucciones());
-        existente.setConsultaId(dto.getConsultaId());
-        existente.setMedicamentosId(idsString);
-        
-        Receta actualizado = recetaRepository.save(existente);
+
+        encontrado.setFechaReceta(request.getFechaReceta());
+        encontrado.setInstrucciones(request.getInstrucciones());
+        encontrado.setConsultaId(request.getConsultaId());
+        encontrado.setMedicamentosId(medicamentosId);
+        Receta actualizado = recetaRepository.save(encontrado);
         
         return new RecetaResponseDTO(
             actualizado.getId(),
@@ -160,7 +142,10 @@ public class RecetaService {
         );
     }
 
-    public void borrarReceta(Long id){
+    public void borrar(Long id){
+        if (!existeId(id)){
+            throw new RuntimeException("receta no existe");
+        }
         recetaRepository.deleteById(id);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -39,6 +40,19 @@ public class EspecialidadController {
         return ResponseEntity
         .status(HttpStatus.OK)
         .body(especialidadService.buscarDetallado(id));
+    }
+
+
+    @GetMapping("/especialidades")
+    public ResponseEntity<List<EspecialidadResponseDTO>> buscarVariosId(@RequestParam("consultas") List<Long> consultas) {
+        if (especialidadService.buscarVariosId(consultas).isEmpty()){
+            ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body("se debe ingresar identificadores de especialidades");
+        }
+        return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(especialidadService.buscarVariosId(consultas));
     }
 
     @PostMapping

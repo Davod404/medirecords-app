@@ -15,7 +15,7 @@ public class ConsultaResponseDTO {
     private String motivo;
     private String diagnostico;
     
-    private Long pacienteId;
-    private Long personalId;
-    private Long hospitalId;
+    private PacienteDTO pacienteId;
+    private PersonalDTO personalId;
+    private HospitalDTO hospitalId;
 }

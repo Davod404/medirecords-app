@@ -9,5 +9,5 @@ import medirecords_ms.historial.dto.PacienteDTO;
 @FeignClient(name = "paciente")
 public interface PacienteCliente {
     @GetMapping("/api/pacientes/{id}")
-    PacienteDTO buscarDetalle(@PathVariable("id") Long id);
+    PacienteDTO buscarDetallado(@PathVariable("id") Long id);
 }

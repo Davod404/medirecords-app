@@ -1,0 +1,130 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-EurekaServerApplication<eureka-server>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.eureka_server.EurekaServerApplication",
+            "projectName": "eureka-server",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=55160 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=eureka-server"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiGatewayApplication<api-gateway>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.api_gateway.ApiGatewayApplication",
+            "projectName": "api-gateway",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=49674 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=api-gateway"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CargoApplication<cargo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.cargo.CargoApplication",
+            "projectName": "cargo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=58130 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=cargo"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EspecialidadApplication<especialidad>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.especialidad.EspecialidadApplication",
+            "projectName": "especialidad",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57661 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=especialidad"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PersonalApplication<personal>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.personal.PersonalApplication",
+            "projectName": "personal",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=57671 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=personal"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ConsultaApplication<consulta>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.consulta.ConsultaApplication",
+            "projectName": "consulta",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env",
+            "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=54645 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=consulta"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-HospitalApplication<hospital>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.hospital.HospitalApplication",
+            "projectName": "hospital",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MedicamentoApplication<medicamento>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.medicamento.MedicamentoApplication",
+            "projectName": "medicamento",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PacienteApplication<paciente>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.paciente.PacienteApplication",
+            "projectName": "paciente",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-RecetaApplication<receta>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.receta.RecetaApplication",
+            "projectName": "receta",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-HistorialApplication<historial>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.historial.HistorialApplication",
+            "projectName": "historial",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-AuthApplication<auth>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medirecords_ms.auth.AuthApplication",
+            "projectName": "auth",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
