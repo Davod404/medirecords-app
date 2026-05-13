@@ -15,5 +15,5 @@ public class HistorialResponseDTO {
     private String notas;
     private LocalDate fechaActualizacion;
     private PacienteDTO paciente;
-    private List<ConsultaDTO> consulta;
+    private List<ConsultaDTO> consultas;
 }

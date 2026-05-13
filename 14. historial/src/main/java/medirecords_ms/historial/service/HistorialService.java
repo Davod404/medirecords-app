@@ -35,6 +35,18 @@ public class HistorialService {
         return resultado;
     }
 
+    private List<Long> convertirStringToLista(String idsString) {
+    if (idsString == null || idsString.isEmpty()) {
+        return new ArrayList<>();
+    }
+    List<Long> lista = new ArrayList<>();
+    String[] partes = idsString.split(",");
+    for (String parte : partes) {
+        lista.add(Long.parseLong(parte));
+    }
+    return lista;
+}
+
      public List<HistorialResponseDTO> listarTodos() {
         List<Historial> lista = historialRepository.findAll();
         List<HistorialResponseDTO> resultado = new ArrayList<>();
@@ -43,7 +55,7 @@ public class HistorialService {
             
             PacienteDTO paciente = pacienteCliente.buscarDetallado(historial.getPacienteId());
             
-            String consultasId = historial.getConsultasId();
+            List<Long> consultasId = convertirStringToLista(historial.getConsultasId());
             List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(consultasId);
             if(consultas.isEmpty()){
                 throw new RuntimeException("consultas no puede estar vacio");
@@ -75,7 +87,7 @@ public class HistorialService {
         
         PacienteDTO paciente = pacienteCliente.buscarDetallado(historial.getPacienteId());
         
-        String consultasId = historial.getConsultasId();
+        List<Long> consultasId = convertirStringToLista(historial.getConsultasId());
         List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(consultasId);
         if(consultas.isEmpty()){
             throw new RuntimeException("consultas no puede estar vacio");
@@ -90,15 +102,15 @@ public class HistorialService {
         );
     }
 
-    public List<HistorialResponseDTO> buscarVariosId(List<Long> ids) {
-        List<Historial> historiales = historialRepository.findAllById(ids);
+    public List<HistorialResponseDTO> buscarVariosId(List<Long> consultasId) {
+        List<Historial> historiales = historialRepository.findAllById(consultasId);
         List<HistorialResponseDTO> resultado = new ArrayList<>();
         
         for (Historial historial : historiales) {
             PacienteDTO paciente = pacienteCliente.buscarDetallado(historial.getPacienteId());
             
-            String consultasId = historial.getConsultasId();
-            List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(consultasId);
+            List<Long> listaConsultasId = convertirStringToLista(historial.getConsultasId());
+            List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(listaConsultasId);
             if(consultas.isEmpty()){
                 throw new RuntimeException("consultas no puede estar vacio");
             }
@@ -117,9 +129,9 @@ public class HistorialService {
 
     public HistorialResponseDTO crear(HistorialRequestDTO request) {
         PacienteDTO paciente = pacienteCliente.buscarDetallado(request.getPacienteId());
-        
-        String idsString = convertirListaToString(request.getConsultasId());
-        List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(idsString);
+
+        String consultasId = convertirListaToString(request.getConsultasId());
+        List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(request.getConsultasId());
         if(consultas.isEmpty()){
             throw new RuntimeException("consultas no puede estar vacio");
         }
@@ -128,7 +140,7 @@ public class HistorialService {
         historial.setNotas(request.getNotas());
         historial.setFechaActualizacion(request.getFechaActualizacion());
         historial.setPacienteId(request.getPacienteId());
-        historial.setConsultasId(idsString);
+        historial.setConsultasId(consultasId);
         
         Historial guardado = historialRepository.save(historial);
         
@@ -147,7 +159,7 @@ public class HistorialService {
         PacienteDTO paciente = pacienteCliente.buscarDetallado(request.getPacienteId());
         
         String consultasId = convertirListaToString(request.getConsultasId());
-        List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(consultasId);
+        List<ConsultaDTO> consultas = consultaCliente.buscarVariosId(request.getConsultasId());
         if(consultas.isEmpty()){
             throw new RuntimeException("consultas no puede estar vacio");
         }   

@@ -44,9 +44,9 @@ public class ConsultaController {
     }
 
     @GetMapping("/consultas")
-    public ResponseEntity<List<ConsultaResponseDTO>> buscarVariosId(@RequestParam("consultas") List<Long> consultas) {
+    public ResponseEntity<?> buscarVariosId(@RequestParam("consultas") List<Long> consultas) {
         if (consultaService.buscarVariosId(consultas).isEmpty()){
-            ResponseEntity
+            return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body("se debe ingresar identificadores de consultas");
         }

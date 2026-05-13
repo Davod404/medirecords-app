@@ -98,6 +98,8 @@ public class PersonalService {
         );
     }
 
+
+
     public PersonalResponseDTO crear(PersonalRequestDTO request) {
         CargoDTO cargo = cargoCliente.buscarId(request.getCargoId());
         

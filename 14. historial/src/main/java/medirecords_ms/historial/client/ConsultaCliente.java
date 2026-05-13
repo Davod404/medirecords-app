@@ -15,5 +15,5 @@ public interface ConsultaCliente {
     ConsultaDTO buscarDetallado(@PathVariable("id") Long id);
 
     @GetMapping("/api/consultas")
-    List<ConsultaDTO> buscarVariosId(@RequestParam("consultas") String consultas);
+    List<ConsultaDTO> buscarVariosId(@RequestParam("consultas") List<Long> consultas);
 }
