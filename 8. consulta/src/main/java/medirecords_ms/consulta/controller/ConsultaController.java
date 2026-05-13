@@ -1,4 +1,4 @@
-    package medirecords_ms.medicamento.controller;
+package medirecords_ms.consulta.controller;
 
 import java.util.List;
 
@@ -16,78 +16,79 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import medirecords_ms.medicamento.dto.MedicamentoRequestDTO;
-import medirecords_ms.medicamento.dto.MedicamentoResponseDTO;
-import medirecords_ms.medicamento.service.MedicamentoService;
+import medirecords_ms.consulta.dto.ConsultaRequestDTO;
+import medirecords_ms.consulta.dto.ConsultaResponseDTO;
+import medirecords_ms.consulta.service.ConsultaService;
 
 @RestController
-@RequestMapping("/api/medicamentos")
-public class MedicamentoController {
-    @Autowired private MedicamentoService medicamentoService;
+@RequestMapping("/api/consultas")
+public class ConsultaController {
+    @Autowired
+    private ConsultaService consultaService;
 
     @GetMapping
-    public ResponseEntity<List<MedicamentoResponseDTO>> listarTodos(){
-        return ResponseEntity.ok(medicamentoService.listarTodos());
+    public ResponseEntity<List<ConsultaResponseDTO>> listarTodos(){
+        return ResponseEntity.ok(consultaService.listarTodos());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarId(@PathVariable Long id){
-        if (medicamentoService.existeId(id)){
+        if (!consultaService.existeId(id)){
             return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body("no existe medicamento con id: " + id);
+            .body("no existe consulta con id: " + id);
         }
         return ResponseEntity
         .status(HttpStatus.OK)
-        .body(medicamentoService.buscarDetallado(id));
+        .body(consultaService.buscarDetallado(id));
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<MedicamentoResponseDTO>> buscarVariosId(@RequestParam("ids") String ids) {
+    public ResponseEntity<List<ConsultaResponseDTO>> buscarVariosId(@RequestParam("ids") String ids) {
         if (ids.isBlank()){
             ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body("se debe ingresar identificadores de medicamento");
+            .body("se debe ingresar identificadores de consultas");
         }
         return ResponseEntity
         .status(HttpStatus.OK)
-        .body(medicamentoService.buscarVariosId(ids));
+        .body(consultaService.buscarVariosId(ids));
     }
 
     @PostMapping
-    public ResponseEntity<?> nuevoPaciente(@Valid @RequestBody MedicamentoRequestDTO request){
-        if (!medicamentoService.existeId(request.getId())){
+    public ResponseEntity<?> crear(@Valid @RequestBody ConsultaRequestDTO request){
+        if (!consultaService.existeId(request.getId())){
             return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(medicamentoService.crear(request));
+            .body(consultaService.crear(request));
         }
         return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
-        .body("medicamento con id " + request.getId() + " ya existe");
+        .body("consulta con id " + request.getId() + " ya existe");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody MedicamentoRequestDTO request){
-        if (medicamentoService.existeId(id)){
+    public ResponseEntity<?> actualizar(@PathVariable Long id, @Valid @RequestBody ConsultaRequestDTO request){
+        if (consultaService.existeId(id)){
             return ResponseEntity
             .status(HttpStatus.OK)
-            .body(medicamentoService.actualizar(id, request));
+            .body(consultaService.actualizar(id, request));
         }
         return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
-        .body("medicamento con id " + id + "no existe");
+        .body("consulta con id " + id + "no existe");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> borrar(@PathVariable Long id){
-        if(!medicamentoService.existeId(id)){
+        if(!consultaService.existeId(id)){
             return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body("medicamento con id " + id + "no existe");
+            .body("consulta con id " + id + "no existe");
         }
-        medicamentoService.borrar(id);
+        consultaService.borrar(id);
         return ResponseEntity
         .status(HttpStatus.NO_CONTENT)
-        .body("medicamento con id " + id + "borrado exitosamente");
+        .body("consulta con id " + id + "borrado exitosamente");
     }
 }

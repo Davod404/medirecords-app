@@ -14,6 +14,18 @@ import medirecords_ms.medicamento.repository.MedicamentoRepository;
 @Service
 public class MedicamentoService {
     @Autowired private MedicamentoRepository medicamentoRepository;
+    
+    private List<Long> convertirStringToLista(String especialidades) {
+        if (especialidades == null || especialidades.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Long> lista = new ArrayList<>();
+        String[] partes = especialidades.split(",");
+        for (String parte : partes) {
+            lista.add(Long.parseLong(parte));
+        }
+        return lista;
+    }
 
     public List<MedicamentoResponseDTO> listarTodos(){
         List<Medicamento> lista = medicamentoRepository.findAll();
@@ -53,22 +65,15 @@ public class MedicamentoService {
             medicamento.getStock()
         );
     }
-    
-    public List<MedicamentoResponseDTO> buscarVariosId(List<Long> medicamentos){
+
+    public List<MedicamentoResponseDTO> buscarVariosId(String medicamentosId){
         List<MedicamentoResponseDTO> resultado = new ArrayList<>();
 
-        for(Long id : medicamentos){
-            Medicamento encontrado = buscarId(id);
-            
-            MedicamentoResponseDTO response = new MedicamentoResponseDTO(
-            encontrado.getId(),
-            encontrado.getNombre(),
-            encontrado.getMarca(),
-            encontrado.getTipo(),
-            encontrado.getPrecio(),
-            encontrado.getStock()
-            );
-            resultado.add(response);
+        List<Long> listaId = convertirStringToLista(medicamentosId);
+        for (Long id : listaId){
+            MedicamentoResponseDTO medicamentos = buscarDetallado(id);
+
+            resultado.add(medicamentos);
         }
         return resultado;
     }

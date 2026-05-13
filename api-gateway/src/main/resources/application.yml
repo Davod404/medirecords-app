@@ -11,7 +11,7 @@ spring:
           enabled: true
       routes:
         - id: hospital
-          uri: lb://hospitales
+          uri: lb://hospital
           predicates:
             - Path=/api/hospitales/**
         - id: paciente
@@ -19,7 +19,7 @@ spring:
           predicates:
             - Path=/api/pacientes/**
         - id: medicamento
-          uri: lb://medicamentos
+          uri: lb://medicamento
           predicates:
             - Path=/api/medicamentos/**
         - id: cargo

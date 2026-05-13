@@ -43,16 +43,16 @@ public class EspecialidadController {
     }
 
 
-    @GetMapping("/especialidades")
-    public ResponseEntity<List<EspecialidadResponseDTO>> buscarVariosId(@RequestParam("consultas") List<Long> consultas) {
-        if (especialidadService.buscarVariosId(consultas).isEmpty()){
+    @GetMapping("/buscar")
+    public ResponseEntity<List<EspecialidadResponseDTO>> buscarVariosId(@RequestParam("ids") String ids) {
+        if (ids.isBlank()){
             ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body("se debe ingresar identificadores de especialidades");
         }
         return ResponseEntity
         .status(HttpStatus.OK)
-        .body(especialidadService.buscarVariosId(consultas));
+        .body(especialidadService.buscarVariosId(ids));
     }
 
     @PostMapping
