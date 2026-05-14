@@ -55,15 +55,10 @@ public class MedicamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> nuevoPaciente(@Valid @RequestBody MedicamentoRequestDTO request){
-        if (!medicamentoService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(medicamentoService.crear(request));
-        }
+    public ResponseEntity<?> crear(@Valid @RequestBody MedicamentoRequestDTO request){
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("medicamento con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(medicamentoService.crear(request));
     }
 
     @PutMapping("/{id}")

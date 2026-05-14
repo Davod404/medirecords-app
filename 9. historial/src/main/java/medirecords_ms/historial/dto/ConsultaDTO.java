@@ -14,8 +14,4 @@ public class ConsultaDTO {
     private LocalDate fechaConsulta;
     private String motivo;
     private String diagnostico;
-    
-    private Long pacienteId;
-    private Long personalId;
-    private Long hospitalId;
 }

@@ -71,12 +71,7 @@ public class EspecialidadService {
     }
 
     public EspecialidadResponseDTO crear(EspecialidadRequestDTO request){
-        if (existeId(request.getId())){
-            throw new RuntimeException("especialidad ya existe");
-        }
-        
         Especialidad nuevo = new Especialidad();
-        nuevo.setEspecialidad(request.getEspecialidad());
         nuevo.setEspecialidad(request.getEspecialidad());
         Especialidad guardado = especialidadRepository.save(nuevo);
         
@@ -88,8 +83,6 @@ public class EspecialidadService {
 
     public EspecialidadResponseDTO actualizar(Long id, EspecialidadRequestDTO request){
         Especialidad encontrado = buscarId(id);
-        
-        encontrado.setEspecialidad(request.getEspecialidad());
         encontrado.setEspecialidad(request.getEspecialidad());
         Especialidad actualizado = especialidadRepository.save(encontrado);
 

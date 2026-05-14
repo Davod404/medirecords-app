@@ -42,15 +42,10 @@ public class CargoController {
     }
 
     @PostMapping
-    public ResponseEntity<?> nuevoPaciente(@Valid @RequestBody CargoRequestDTO request){
-        if (!cargoService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(cargoService.crear(request));
-        }
+    public ResponseEntity<?> crear(@Valid @RequestBody CargoRequestDTO request){
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("cargo con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(cargoService.crear(request));
     }
 
     @PutMapping("/{id}")

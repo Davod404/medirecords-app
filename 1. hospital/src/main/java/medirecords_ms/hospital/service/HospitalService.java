@@ -52,10 +52,6 @@ public class HospitalService {
     }
 
     public HospitalResponseDTO crear(HospitalRequestDTO request){
-        if (existeId(request.getId())){
-            throw new RuntimeException("hospital ya existe");
-        }
-
         Hospital nuevo = new Hospital();
         nuevo.setNombre(request.getNombre());
         nuevo.setDireccion(request.getDireccion());

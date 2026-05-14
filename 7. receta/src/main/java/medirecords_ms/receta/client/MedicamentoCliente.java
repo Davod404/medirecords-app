@@ -14,6 +14,6 @@ public interface MedicamentoCliente {
     @GetMapping("/api/medicamentos/{id}")
     MedicamentoDTO buscarId(@PathVariable String id);
 
-    @GetMapping("/api/medicamento/buscar")
+    @GetMapping("/api/medicamentos/buscar")
     List<MedicamentoDTO> buscarVariosId(@RequestParam("ids") String ids);
 }

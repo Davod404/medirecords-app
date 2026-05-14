@@ -46,13 +46,8 @@ public class CargoService {
         );
     }
     
-    public CargoResponseDTO crear(CargoRequestDTO request) {
-        if (existeId(request.getId())){
-            throw new RuntimeException("cargo ya existe");
-        }
-        
+    public CargoResponseDTO crear(CargoRequestDTO request){
         Cargo nuevo = new Cargo();
-        nuevo.setCargo(request.getCargo());
         nuevo.setCargo(request.getCargo());
         Cargo guardado = cargoRepository.save(nuevo);
         
@@ -64,8 +59,6 @@ public class CargoService {
 
     public CargoResponseDTO actualizar(Long id, CargoRequestDTO request){
         Cargo encontrado = buscarId(id);
-
-        encontrado.setCargo(request.getCargo());
         encontrado.setCargo(request.getCargo());
         Cargo actualizado = cargoRepository.save(encontrado);
 

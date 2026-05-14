@@ -87,7 +87,6 @@ public class RecetaService {
         receta.setInstrucciones(request.getInstrucciones());
         receta.setConsultaId(request.getConsultaId());
         receta.setMedicamentosId(medicamentosId);
-        
         Receta guardado = recetaRepository.save(receta);
         
         return new RecetaResponseDTO(

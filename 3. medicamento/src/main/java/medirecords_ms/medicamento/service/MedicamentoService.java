@@ -79,10 +79,6 @@ public class MedicamentoService {
     }
 
     public MedicamentoResponseDTO crear(MedicamentoRequestDTO request) {
-        if (existeId(request.getId())){
-            throw new RuntimeException("medicamento ya existe");
-        }
-
         Medicamento nuevo = new Medicamento();
         nuevo.setNombre(request.getNombre());
         nuevo.setMarca(request.getMarca());
@@ -109,7 +105,6 @@ public class MedicamentoService {
         encontrado.setTipo(request.getTipo());
         encontrado.setPrecio(request.getPrecio());
         encontrado.setStock(request.getStock());
-
         Medicamento actualizado = medicamentoRepository.save(encontrado);
 
         return new MedicamentoResponseDTO(

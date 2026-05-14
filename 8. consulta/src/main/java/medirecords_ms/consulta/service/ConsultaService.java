@@ -86,24 +86,35 @@ public class ConsultaService {
         );
     }
 
-    public List<ConsultaResponseDTO> buscarVariosId(String especialidadesId){
+    public List<ConsultaResponseDTO> buscarVariosId(String consultasId){
         List<ConsultaResponseDTO> resultado = new ArrayList<>();
+        
+        List<Long> listaId = convertirStringToLista(consultasId);
+        for (Long id : listaId){    
+            Consulta consulta = buscarId(id);
+            PacienteDTO paciente = pacienteCliente.buscarDetallado(consulta.getPacienteId());
+            PersonalDTO personal = personalCliente.buscarDetallado(consulta.getPersonalId()); 
+            HospitalDTO hospital = hospitalCliente.buscarDetallado(consulta.getHospitalId());
 
-        List<Long> listaId = convertirStringToLista(especialidadesId);
-        for (Long id : listaId){
-            ConsultaResponseDTO especialidad = buscarDetallado(id);
-
-            resultado.add(especialidad);
+            ConsultaResponseDTO response = new ConsultaResponseDTO(
+                consulta.getId(),
+                consulta.getFechaConsulta(),
+                consulta.getMotivo(),
+                consulta.getDiagnostico(),
+                paciente,
+                personal,
+                hospital
+            );
+            
+            resultado.add(response);
         }
         return resultado;
     }
 
-    public ConsultaResponseDTO crear(ConsultaRequestDTO request) {
-        Consulta encontrada = buscarId(request.getId());
-        
-        PacienteDTO paciente = pacienteCliente.buscarDetallado(encontrada.getPacienteId());
-        PersonalDTO personal = personalCliente.buscarDetallado(encontrada.getPersonalId());
-        HospitalDTO hospital = hospitalCliente.buscarDetallado(encontrada.getHospitalId());
+    public ConsultaResponseDTO crear(ConsultaRequestDTO request) {       
+        PacienteDTO paciente = pacienteCliente.buscarDetallado(request.getPacienteId());
+        PersonalDTO personal = personalCliente.buscarDetallado(request.getPersonalId());
+        HospitalDTO hospital = hospitalCliente.buscarDetallado(request.getHospitalId());
 
         Consulta consulta = new Consulta();
         consulta.setFechaConsulta(request.getFechaConsulta());

@@ -43,14 +43,9 @@ public class RecetaController {
     
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody RecetaRequestDTO request){
-        if (!recetaService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(recetaService.crear(request));
-        }
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("receta con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(recetaService.crear(request));
     }
 
     @PutMapping("/{id}")

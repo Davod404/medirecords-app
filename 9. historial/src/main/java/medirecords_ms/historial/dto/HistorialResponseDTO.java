@@ -14,6 +14,6 @@ public class HistorialResponseDTO {
     private Long id;
     private String notas;
     private LocalDate fechaActualizacion;
-    private Long pacienteId;
-    private List<Long> consultasId;
+    private PacienteDTO pacienteId;
+    private List<ConsultaDTO> consultasId;
 }

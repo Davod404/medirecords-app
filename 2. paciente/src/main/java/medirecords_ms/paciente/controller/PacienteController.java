@@ -43,14 +43,9 @@ public class PacienteController {
 
     @PostMapping
     public ResponseEntity<?> nuevoPaciente(@Valid @RequestBody PacienteRequestDTO request){
-        if (!pacienteService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(pacienteService.crear(request));
-        }
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("hospital con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(pacienteService.crear(request));
     }
 
     @PutMapping("/{id}")

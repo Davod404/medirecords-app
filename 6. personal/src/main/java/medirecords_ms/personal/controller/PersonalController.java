@@ -43,14 +43,9 @@ public class PersonalController {
     
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody PersonalRequestDTO request){
-        if (!personalService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(personalService.crear(request));
-        }
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("personal con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(personalService.crear(request));
     }
 
     @PutMapping("/{id}")

@@ -69,10 +69,6 @@ public class PacienteService {
     }
     
     public PacienteResponseDTO crear(PacienteRequestDTO request) {
-        if (existeId(request.getId())){
-            throw new RuntimeException("paciente ya existe");
-        }
-        
         HospitalDTO hospital = hospitalCliente.buscarId(request.getHospitalId());
         
         Paciente nuevo = new Paciente();

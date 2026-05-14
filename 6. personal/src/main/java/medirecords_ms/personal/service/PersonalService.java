@@ -99,7 +99,6 @@ public class PersonalService {
         personal.setEmail(request.getEmail());
         personal.setCargoId(request.getCargoId());
         personal.setEspecialidadesId(especialidadesId);
-        
         Personal guardado = personalRepository.save(personal);
         
         return new PersonalResponseDTO(

@@ -43,8 +43,9 @@ public class HistorialController {
     
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody HistorialRequestDTO request){
-        return ResponseEntity.status(HttpStatus.CREATED)
-            .body(historialService.crear(request));
+        return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(historialService.crear(request));
     }
 
     @PutMapping("/{id}")

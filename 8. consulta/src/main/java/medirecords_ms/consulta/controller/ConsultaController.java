@@ -23,8 +23,7 @@ import medirecords_ms.consulta.service.ConsultaService;
 @RestController
 @RequestMapping("/api/consultas")
 public class ConsultaController {
-    @Autowired
-    private ConsultaService consultaService;
+    @Autowired private ConsultaService consultaService;
 
     @GetMapping
     public ResponseEntity<List<ConsultaResponseDTO>> listarTodos(){
@@ -57,14 +56,9 @@ public class ConsultaController {
 
     @PostMapping
     public ResponseEntity<?> crear(@Valid @RequestBody ConsultaRequestDTO request){
-        if (!consultaService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(consultaService.crear(request));
-        }
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("consulta con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(consultaService.crear(request));
     }
 
     @PutMapping("/{id}")

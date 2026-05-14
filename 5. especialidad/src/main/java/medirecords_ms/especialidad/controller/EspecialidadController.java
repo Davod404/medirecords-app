@@ -56,15 +56,10 @@ public class EspecialidadController {
     }
 
     @PostMapping
-    public ResponseEntity<?> nuevoPaciente(@Valid @RequestBody EspecialidadRequestDTO request){
-        if (!especialidadService.existeId(request.getId())){
-            return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(especialidadService.crear(request));
-        }
+    public ResponseEntity<?> crear(@Valid @RequestBody EspecialidadRequestDTO request){
         return ResponseEntity
-        .status(HttpStatus.BAD_REQUEST)
-        .body("especialidad con id " + request.getId() + " ya existe");
+        .status(HttpStatus.CREATED)
+        .body(especialidadService.crear(request));
     }
 
     @PutMapping("/{id}")
