@@ -52,4 +52,4 @@ Cada microservicio implementa las siguientes operaciones CRUD:
 
 | pathing de ms | Listar | Buscar | Crear | Actualizar | Borrar |
 |---------------|--------|--------|-------|------------|--------|
-| /api/{microservicio} | `GET` | `GET /{id}` | `POST body con atributos` | `PUT /{id}`, `body con nuevos atributos` | `DELETE /{id}`|
+| /api/{microservicio(plural excepto personal)} | `GET` | `GET /{id}` | `POST body con atributos` | `PUT /{id}`, `body con nuevos atributos` | `DELETE /{id}`|
