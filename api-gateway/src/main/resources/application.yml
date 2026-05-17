@@ -46,6 +46,10 @@ spring:
           uri: lb://historial
           predicates:
             - Path=/api/historiales/**
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/api/auth/**
 
 eureka:
   client:
