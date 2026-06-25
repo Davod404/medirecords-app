@@ -1,0 +1,99 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+              cors-configurations:
+                '[/**]':
+                  allowedOriginPatterns: ["*"] 
+                  allowedMethods:
+                    - GET
+                    - POST
+                    - PUT
+                    - DELETE
+                    - OPTIONS
+                  allowedHeaders: ["*"]
+                  allowCredentials: true
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: hospital
+          uri: lb://hospital
+          predicates:
+            - Path=/api/hospitales/**
+        - id: paciente
+          uri: lb://paciente
+          predicates:
+            - Path=/api/pacientes/**
+        - id: medicamento
+          uri: lb://medicamento
+          predicates:
+            - Path=/api/medicamentos/**
+        - id: cargo
+          uri: lb://cargo
+          predicates:
+            - Path=/api/cargos/**
+        - id: especialidad
+          uri: lb://especialidad
+          predicates:
+            - Path=/api/especialidades/**
+        - id: personal
+          uri: lb://personal
+          predicates:
+            - Path=/api/personal/**
+        - id: receta
+          uri: lb://receta
+          predicates:
+            - Path=/api/recetas/**
+        - id: consulta
+          uri: lb://consulta
+          predicates:
+            - Path=/api/consultas/**
+        - id: historial
+          uri: lb://historial
+          predicates:
+            - Path=/api/historiales/**
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/api/auth/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+# springdoc:
+#   api-docs:
+#     server-url: http://localhost:8080
+#     enabled: true
+#   swagger-ui:
+#     disable-swagger-default-url: true
+#     path: /swagger-ui.html
+#     urls:
+#       - name: hospital
+#         url: /hospital/v3/api-docs
+#       - name: paciente
+#         url: /paciente/v3/api-docs
+#       - name: medicamento
+#         url: /medicamento/v3/api-docs
+#       - name: cargo
+#         url: /cargo/v3/api-docs
+#       - name: especialidad
+#         url: /especialidad/v3/api-docs
+#       - name: personal
+#         url: /personal/v3/api-docs
+#       - name: receta
+#         url: /receta/v3/api-docs
+#       - name: consulta
+#         url: /consulta/v3/api-docs
+#       - name: historial
+#         url: /historial/v3/api-docs
+#       - name: auth
+#         url: /auth/v3/api-docs

@@ -1,4 +1,4 @@
-    package medirecords_ms.medicamento.controller;
+package medirecords_ms.medicamento.controller;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class MedicamentoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarId(@PathVariable Long id){
-        if (medicamentoService.existeId(id)){
+        if (!medicamentoService.existeId(id)){
             return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body("no existe medicamento con id: " + id);
