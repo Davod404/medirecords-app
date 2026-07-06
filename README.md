@@ -79,7 +79,7 @@ Para resolver dependencias de datos entre dominios de forma síncrona, se utiliz
 ### 1. Descarga de Artefactos Compilados
 Los archivos `.jar` ya compilados y listos para empaquetarse en contenedores deben descargarse del siguiente enlace:
 
-* 📦 [Descargar JARs Compilados de MediRecords](https://drive.google.com/file/d/1mmAQYAMaTjm8AYDJkeO051D3Cs-a4uu0/view?usp=drive_link)
+* 📦 [Descargar JARs Compilados de MediRecords](https://drive.google.com/drive/folders/1N0xji29VoXijUiUD_4LqrX0ohLLuUwqs?usp=drive_link)
 
 Una vez descargado el archivo comprimido, extrae todo su contenido estrictamente en la siguiente ruta del proyecto:
 `medirecords-docker/apps/`
